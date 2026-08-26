@@ -1,0 +1,289 @@
+@import "tailwindcss";
+
+@theme {
+  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-accent: "Instrument Serif", Georgia, serif;
+  --radius: 2px;
+  --color-background: hsl(220 15% 4%);
+  --color-foreground: hsl(210 20% 98%);
+  --color-card: hsl(220 15% 9%);
+  --color-card-foreground: hsl(210 20% 98%);
+  --color-primary: hsl(220 80% 55%);
+  --color-primary-foreground: hsl(210 20% 98%);
+  --color-secondary: hsl(220 15% 15%);
+  --color-secondary-foreground: hsl(210 20% 98%);
+  --color-muted: hsl(220 15% 15%);
+  --color-muted-foreground: hsl(220 10% 65%);
+  --color-accent: hsl(280 60% 55%);
+  --color-accent-foreground: hsl(210 20% 98%);
+  --color-border: hsl(220 15% 20%);
+  --color-input: hsl(220 15% 20%);
+  --color-ring: hsl(220 80% 55%);
+  --color-sapphire: hsl(220 80% 55%);
+  --color-ruby: hsl(350 75% 55%);
+  --color-emerald: hsl(160 70% 40%);
+  --color-gold: hsl(40 90% 55%);
+}
+
+:root {
+  --background: 220 15% 4%;
+  --foreground: 210 20% 98%;
+  --card: 220 15% 9%;
+  --card-foreground: 210 20% 98%;
+  --primary: 220 80% 55%;
+  --primary-foreground: 210 20% 98%;
+  --secondary: 220 15% 15%;
+  --secondary-foreground: 210 20% 98%;
+  --muted: 220 15% 15%;
+  --muted-foreground: 220 10% 65%;
+  --accent: 280 60% 55%;
+  --accent-foreground: 210 20% 98%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 20% 98%;
+  --border: 220 15% 20%;
+  --input: 220 15% 20%;
+  --ring: 220 80% 55%;
+  --radius: 2px;
+  --font-body: 'Inter', sans-serif;
+  --font-heading: 'Outfit', sans-serif;
+  --font-accent: 'Instrument Serif', serif;
+}
+
+.dark {
+  --background: 220 15% 4%;
+  --foreground: 210 20% 98%;
+  --card: 220 15% 9%;
+  --card-foreground: 210 20% 98%;
+  --primary: 220 80% 55%;
+  --primary-foreground: 210 20% 98%;
+  --secondary: 220 15% 15%;
+  --secondary-foreground: 210 20% 98%;
+  --muted: 220 15% 15%;
+  --muted-foreground: 220 10% 65%;
+  --accent: 280 60% 55%;
+  --accent-foreground: 210 20% 98%;
+  --border: 220 15% 20%;
+  --input: 220 15% 20%;
+  --ring: 220 80% 55%;
+}
+
+.light {
+  --background: 210 30% 98%;
+  --foreground: 222.2 84% 4.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+  --primary: 221.2 83.2% 53.3%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 210 40% 93.7%;
+  --secondary-foreground: 222.2 47.4% 11.2%;
+  --muted: 210 40% 93.7%;
+  --muted-foreground: 215.4 16.3% 44%;
+  --accent: 262.1 83.3% 57.8%;
+  --accent-foreground: 210 40% 98%;
+  --border: 214.3 31.8% 86.4%;
+  --input: 214.3 31.8% 86.4%;
+  --ring: 221.2 83.2% 53.3%;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: var(--font-body);
+  overflow-x: hidden;
+}
+
+/* ── Liquid Glass Effects ── */
+.liquid-glass {
+  background: rgba(255, 255, 255, 0.01);
+  background-blend-mode: luminosity;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: none;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.liquid-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.4px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.45) 0%,
+    rgba(255, 255, 255, 0.15) 20%,
+    rgba(255, 255, 255, 0) 40%,
+    rgba(255, 255, 255, 0) 60%,
+    rgba(255, 255, 255, 0.15) 80%,
+    rgba(255, 255, 255, 0.45) 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.liquid-glass-strong {
+  background: rgba(255, 255, 255, 0.01);
+  background-blend-mode: luminosity;
+  backdrop-filter: blur(50px);
+  -webkit-backdrop-filter: blur(50px);
+  border: none;
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.05), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.liquid-glass-strong::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.4px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.5) 0%,
+    rgba(255, 255, 255, 0.2) 20%,
+    rgba(255, 255, 255, 0) 40%,
+    rgba(255, 255, 255, 0) 60%,
+    rgba(255, 255, 255, 0.2) 80%,
+    rgba(255, 255, 255, 0.5) 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* ── Gem Upload Zone ── */
+.upload-zone {
+  border: 2px dashed hsl(var(--border));
+  border-radius: 1rem;
+  background: hsla(220, 15%, 8%, 0.6);
+  backdrop-filter: blur(12px);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.upload-zone:hover,
+.upload-zone.drag-over {
+  border-color: hsl(var(--primary));
+  background: hsla(220, 80%, 55%, 0.05);
+  box-shadow: 0 0 30px hsla(220, 80%, 55%, 0.15);
+}
+
+/* ── Grade Badges ── */
+.grade-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 1.1rem;
+  font-family: var(--font-heading);
+}
+
+.grade-aaa { background: linear-gradient(135deg, hsl(160, 70%, 40%), hsl(160, 80%, 55%)); color: #fff; }
+.grade-aa { background: linear-gradient(135deg, hsl(220, 80%, 45%), hsl(220, 80%, 60%)); color: #fff; }
+.grade-a { background: linear-gradient(135deg, hsl(280, 60%, 45%), hsl(280, 60%, 60%)); color: #fff; }
+.grade-b { background: linear-gradient(135deg, hsl(40, 80%, 45%), hsl(40, 90%, 55%)); color: #fff; }
+.grade-c { background: linear-gradient(135deg, hsl(0, 0%, 35%), hsl(0, 0%, 50%)); color: #fff; }
+
+/* ── Price Slider ── */
+.price-range-track {
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--accent)));
+}
+
+.price-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: hsl(var(--foreground));
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  cursor: grab;
+}
+
+/* ── Shimmer Animation ── */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    hsla(220, 15%, 15%, 1) 25%,
+    hsla(220, 15%, 22%, 1) 50%,
+    hsla(220, 15%, 15%, 1) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* ── Pulse Glow ── */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px hsla(220, 80%, 55%, 0.2); }
+  50% { box-shadow: 0 0 40px hsla(220, 80%, 55%, 0.4); }
+}
+
+.pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* ── Gem Sparkle ── */
+@keyframes sparkle {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+.sparkle {
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+/* ── Print Media Styles for PDF Export ── */
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+  #certificate-modal-content,
+  #certificate-modal-content * {
+    visibility: visible !important;
+  }
+  #certificate-modal-content {
+    position: fixed !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    background: #0f172a !important;
+    color: #ffffff !important;
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 20px !important;
+  }
+  #certificate-buttons,
+  #close-cert-btn-top {
+    display: none !important;
+  }
+}

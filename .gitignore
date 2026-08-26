@@ -1,0 +1,46 @@
+# Node dependencies & outputs
+node_modules/
+backend/server/node_modules/
+dist/
+build/
+*.log
+
+# Environment variables
+.env
+.env.local
+backend/server/.env
+
+# Python Virtual Environments & Caches
+backend/ml-server/venv/
+backend/ml-server/.venv/
+backend/ml-server/__pycache__/
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# Machine Learning Model weights & binaries (>50MB)
+mlmodel/*.keras
+mlmodel/*.h5
+mlmodel/model_unzipped/
+*.keras
+*.h5
+*.weights.h5
+*.onnx
+*.pth
+*.pt
+*.bin
+*.dll
+*.pyd
+*.so
+*.dylib
+
+# Uploads & Temp files
+backend/server/uploads/
+scratch/
+
+# IDE
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
