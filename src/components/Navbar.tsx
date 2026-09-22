@@ -90,11 +90,10 @@ export function Navbar() {
                 onClick={() => {
                   if (item.path === '/') setActiveSection('home');
                 }}
-                className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 ${
-                  isActive
+                className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 ${isActive
                     ? 'bg-primary text-primary-foreground shadow-sm font-semibold'
                     : 'text-foreground/80 hover:text-foreground hover:bg-secondary/50'
-                }`}
+                  }`}
               >
                 {item.label}
               </Link>
@@ -108,11 +107,10 @@ export function Navbar() {
             <a
               key={item.label}
               href={`#${item.section}`}
-              className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 ${
-                isActive
+              className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 ${isActive
                   ? 'bg-primary text-primary-foreground shadow-sm font-semibold'
                   : 'text-foreground/80 hover:text-foreground hover:bg-secondary/50'
-              }`}
+                }`}
               onClick={(e) => handleScrollClick(e, item.section)}
             >
               {item.label}
@@ -131,20 +129,6 @@ export function Navbar() {
 
       {/* Actions (Theme Switcher + Analyze Quick Button) */}
       <div className="relative z-10 flex items-center gap-3">
-        {/* Theme Toggle Button */}
-        <button
-          type="button"
-          onClick={toggleTheme}
-          aria-label="Toggle dark/light theme"
-          className="p-2.5 rounded-full bg-secondary/60 hover:bg-secondary border border-border/50 text-foreground transition-all duration-200 hover:scale-105 active:scale-95"
-        >
-          {theme === 'dark' ? (
-            <Sun className="w-4 h-4 text-amber-400" />
-          ) : (
-            <Moon className="w-4 h-4 text-indigo-600" />
-          )}
-        </button>
-
         {/* Quick CTA */}
         <Link
           to="/analyze"
@@ -187,11 +171,10 @@ export function Navbar() {
                     <Link
                       key={item.label}
                       to={item.path}
-                      className={`px-4 py-3 text-base font-medium rounded-xl transition-colors ${
-                        isActive
+                      className={`px-4 py-3 text-base font-medium rounded-xl transition-colors ${isActive
                           ? 'bg-primary text-primary-foreground font-semibold'
                           : 'text-foreground hover:bg-secondary/60'
-                      }`}
+                        }`}
                       onClick={() => {
                         if (item.path === '/') setActiveSection('home');
                         setMobileOpen(false);
@@ -208,11 +191,10 @@ export function Navbar() {
                   <a
                     key={item.label}
                     href={`#${item.section}`}
-                    className={`px-4 py-3 text-base font-medium rounded-xl transition-colors ${
-                      isActive
+                    className={`px-4 py-3 text-base font-medium rounded-xl transition-colors ${isActive
                         ? 'bg-primary text-primary-foreground font-semibold'
                         : 'text-foreground hover:bg-secondary/60'
-                    }`}
+                      }`}
                     onClick={(e) => {
                       handleScrollClick(e, item.section);
                       setMobileOpen(false);
