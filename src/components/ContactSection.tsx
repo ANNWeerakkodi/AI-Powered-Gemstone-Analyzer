@@ -1,6 +1,5 @@
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
-import heroVideo from '../../assets/GemVideo.mp4';
 
 const fadeUp = (delay: number) => ({
   initial: { opacity: 0, y: delay > 0.15 ? 30 : 20 },
@@ -17,7 +16,7 @@ export function ContactSection() {
     >
       <video
         className="absolute inset-0 h-full w-full object-cover"
-        src={heroVideo}
+        src="https://res.cloudinary.com/yd5tclbf/video/upload/v1790097043/GemVideo.mp4"
         autoPlay
         loop
         muted

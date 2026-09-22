@@ -1,7 +1,6 @@
 import { motion } from 'motion/react';
 import { Link, useNavigate } from 'react-router-dom';
 import { HERO_STATS } from '../constants';
-import heroVideo from '../../assets/GemHero.mp4';
 import { Sparkles, ArrowRight, Camera, Upload, ShieldCheck } from 'lucide-react';
 
 export function HeroSection() {
@@ -14,7 +13,7 @@ export function HeroSection() {
     >
       {/* Hero Background Video */}
       <video
-        src={heroVideo}
+        src="https://res.cloudinary.com/yd5tclbf/video/upload/v1790096985/GemHero.mp4"
         autoPlay
         muted
         loop
