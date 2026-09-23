@@ -13,7 +13,7 @@ export function ServicesSection() {
   return (
     <section
       id="services"
-      className="scroll-mt-24 bg-background py-32 px-8"
+      className="scroll-mt-10 bg-background py-10 px-8"
     >
       <div className="mx-auto max-w-6xl">
         <motion.div

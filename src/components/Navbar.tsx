@@ -91,8 +91,8 @@ export function Navbar() {
                   if (item.path === '/') setActiveSection('home');
                 }}
                 className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 ${isActive
-                    ? 'bg-primary text-primary-foreground shadow-sm font-semibold'
-                    : 'text-foreground/80 hover:text-foreground hover:bg-secondary/50'
+                  ? 'bg-primary text-primary-foreground shadow-sm font-semibold'
+                  : 'text-foreground/80 hover:text-foreground hover:bg-secondary/50'
                   }`}
               >
                 {item.label}
@@ -108,8 +108,8 @@ export function Navbar() {
               key={item.label}
               href={`#${item.section}`}
               className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 ${isActive
-                  ? 'bg-primary text-primary-foreground shadow-sm font-semibold'
-                  : 'text-foreground/80 hover:text-foreground hover:bg-secondary/50'
+                ? 'bg-primary text-primary-foreground shadow-sm font-semibold'
+                : 'text-foreground/80 hover:text-foreground hover:bg-secondary/50'
                 }`}
               onClick={(e) => handleScrollClick(e, item.section)}
             >
@@ -172,8 +172,8 @@ export function Navbar() {
                       key={item.label}
                       to={item.path}
                       className={`px-4 py-3 text-base font-medium rounded-xl transition-colors ${isActive
-                          ? 'bg-primary text-primary-foreground font-semibold'
-                          : 'text-foreground hover:bg-secondary/60'
+                        ? 'bg-primary text-primary-foreground font-semibold'
+                        : 'text-foreground hover:bg-secondary/60'
                         }`}
                       onClick={() => {
                         if (item.path === '/') setActiveSection('home');
@@ -192,8 +192,8 @@ export function Navbar() {
                     key={item.label}
                     href={`#${item.section}`}
                     className={`px-4 py-3 text-base font-medium rounded-xl transition-colors ${isActive
-                        ? 'bg-primary text-primary-foreground font-semibold'
-                        : 'text-foreground hover:bg-secondary/60'
+                      ? 'bg-primary text-primary-foreground font-semibold'
+                      : 'text-foreground hover:bg-secondary/60'
                       }`}
                     onClick={(e) => {
                       handleScrollClick(e, item.section);
@@ -214,26 +214,6 @@ export function Navbar() {
                 );
               })}
 
-              <div className="pt-4 mt-2 border-t border-border flex items-center justify-between">
-                <span className="text-sm font-medium text-muted-foreground">Appearance</span>
-                <button
-                  type="button"
-                  onClick={toggleTheme}
-                  className="flex items-center gap-2 px-4 py-2 rounded-full bg-secondary text-sm font-medium text-foreground"
-                >
-                  {theme === 'dark' ? (
-                    <>
-                      <Sun className="w-4 h-4 text-amber-400" />
-                      <span>Light Mode</span>
-                    </>
-                  ) : (
-                    <>
-                      <Moon className="w-4 h-4 text-indigo-600" />
-                      <span>Dark Mode</span>
-                    </>
-                  )}
-                </button>
-              </div>
             </nav>
           </motion.div>
         )}

@@ -57,7 +57,7 @@ export function HeroSection() {
           transition={{ duration: 0.7, delay: 0.2 }}
           className="mt-6 text-base md:text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto"
         >
-          Upload or snap a gemstone photo to run real-time deep learning classification across 12 Sri Lankan gem varieties with instant AAA–C grading & valuation.
+          Unleash the ancient mystique of Sri Lankan gemstones with cutting-edge AI technology.
         </motion.p>
 
         {/* Interactive Action Buttons */}
@@ -96,8 +96,7 @@ export function HeroSection() {
           transition={{ delay: 0.5 }}
           className="mt-6 flex items-center justify-center gap-2 text-xs text-muted-foreground"
         >
-          <ShieldCheck className="w-4 h-4 text-emerald" />
-          <span>Only gemstone images accepted · 12-Class Keras Model</span>
+
         </motion.div>
 
         {/* Stats bar */}
