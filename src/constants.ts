@@ -104,12 +104,6 @@ export const SERVICES = [
 export const ABOUT_TEXT =
   'We harness the power of machine learning and deep neural networks to bring world-class gemstone analysis to Sri Lanka\'s vibrant gem industry — enabling miners, dealers, and collectors to identify, grade, and value precious stones with confidence and precision.';
 
-export const HERO_STATS = [
-  { value: '10,000+', label: 'Gems Analyzed' },
-  { value: '95.8%', label: 'Accuracy' },
-  { value: '12', label: 'Gem Varieties' },
-] as const;
-
 export const PROJECTS = [
   {
     title: 'Gem AI Identification Model',
@@ -127,4 +121,3 @@ export const VIDEOS = {
   showcase: '',
   ctaHls: '',
 };
-

@@ -135,36 +135,6 @@ The Python server runs the Keras model to perform the actual AI inference.
 
 ---
 
-## Testing
-
-To ensure that your backend services are correctly configured and can communicate with the database, you can run the included test scripts.
-
-### Backend Connection Test (`test_connection.js`)
-
-This script verifies the connection between your Node.js API server and the Supabase database. 
-
-**Test Cases Covered:**
-1. **Client Initialization:** Checks if the Supabase client successfully initializes with the provided `SUPABASE_URL` and `SUPABASE_KEY` from your `.env` file.
-2. **Database Connectivity & Querying:** Executes a simple query to fetch a single record from the `gemstones` table (`supabase.from('gemstones').select('*').limit(1)`).
-3. **Error Handling:** Validates that appropriate error messages are logged if the connection fails or if the query returns an error.
-
-**How to run:**
-1. Navigate to the server directory:
-   ```bash
-   cd backend/server
-   ```
-2. Execute the test script:
-   ```bash
-   node test_connection.js
-   ```
-3. **Expected Output:**
-   If successful, you will see:
-   ```
-   Testing Supabase Connection...
-   Successfully connected to Supabase!
-   Fetched data: [ ... ]
-   ```
-
 ## Notes
 - If the AI Analyzer fails to connect, ensure both the Node.js server (Port 3001) and Python server (Port 5000) are running simultaneously.
 - You can add your own placeholder images for the Gem Gallery section by placing them in the `public/images/` directory.

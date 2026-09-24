@@ -1,6 +1,5 @@
 import { motion } from 'motion/react';
 import { Link, useNavigate } from 'react-router-dom';
-import { HERO_STATS } from '../constants';
 import { Sparkles, ArrowRight, Camera, Upload, ShieldCheck } from 'lucide-react';
 
 export function HeroSection() {
@@ -97,25 +96,6 @@ export function HeroSection() {
           className="mt-6 flex items-center justify-center gap-2 text-xs text-muted-foreground"
         >
 
-        </motion.div>
-
-        {/* Stats bar */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.6 }}
-          className="mt-16 w-full max-w-3xl grid grid-cols-3 gap-6 pt-8 border-t border-border/40"
-        >
-          {HERO_STATS.map((stat) => (
-            <div key={stat.label} className="text-center">
-              <p className="text-2xl sm:text-4xl font-bold text-foreground font-heading">
-                {stat.value}
-              </p>
-              <p className="text-xs md:text-sm text-muted-foreground mt-1">
-                {stat.label}
-              </p>
-            </div>
-          ))}
         </motion.div>
       </div>
     </section>

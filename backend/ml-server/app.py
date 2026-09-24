@@ -129,8 +129,44 @@ CLASS_LABELS = [
 NAME_MAPPING = {
     "Cats Eye": "Cat's Eye",
     "Sapphire Blue": "Blue Sapphire",
+    "Sapphire Yellow": "Yellow Sapphire",
+    "Sapphire Pink": "Pink Sapphire",
+    "Sapphire Purple": "Purple Sapphire",
     "Garnet Red": "Garnet"
 }
+
+# The training dataset stores several gemstone names in an unnatural order
+# (for example, "Sapphire Yellow"). CLIP is a language model, so prompt it
+# with the names a gemologist would actually use, then map the prompt back to
+# the corresponding model output index.
+CLIP_LABELS = {
+    "Sapphire Blue": "Blue Sapphire",
+    "Sapphire Pink": "Pink Sapphire",
+    "Sapphire Purple": "Purple Sapphire",
+    "Sapphire Yellow": "Yellow Sapphire",
+    "Garnet Red": "Red Garnet",
+    "Beryl Golden": "Golden Beryl",
+    "Aventurine Green": "Green Aventurine",
+    "Aventurine Yellow": "Yellow Aventurine",
+    "Chalcedony Blue": "Blue Chalcedony",
+    "Onyx Black": "Black Onyx",
+    "Onyx Green": "Green Onyx",
+    "Onyx Red": "Red Onyx",
+    "Quartz Beer": "Beer Quartz",
+    "Quartz Lemon": "Lemon Quartz",
+    "Quartz Rose": "Rose Quartz",
+    "Quartz Rutilated": "Rutilated Quartz",
+    "Quartz Smoky": "Smoky Quartz",
+    "Tigers Eye": "Tiger's Eye",
+}
+
+# The CNN was trained on a broad image dataset and is unreliable for yellow
+# sapphires, often favoring visually similar yellow/orange gemstones.
+CNN_FUSION_WEIGHT = 0.25
+
+def clip_prompt_for_label(label):
+    """Return the natural-language prompt used for a model class label."""
+    return f"a photo of a {CLIP_LABELS.get(label, label)} gemstone"
 
 def map_gemstone_name(name):
     return NAME_MAPPING.get(name, name)
@@ -139,6 +175,7 @@ def map_gemstone_name(name):
 model = None
 clip_classifier = None
 model_load_error = None
+model_outputs_probabilities = False
 
 
 def load_keras_model():
@@ -209,6 +246,21 @@ def load_model():
         model_load_error = None
         print(f"[ML Server] Model loaded successfully. Input shape: {model.input_shape}")
         print(f"[ML Server] Output shape: {model.output_shape}")
+
+        # Detect whether the final layer already applies softmax so we
+        # don't apply it a second time (which crushes the distribution
+        # to near-uniform and triggers the low-confidence threshold).
+        global model_outputs_probabilities
+        try:
+            final_cfg = model.layers[-1].get_config()
+            act = final_cfg.get('activation', 'linear')
+            if isinstance(act, dict):
+                act = act.get('class_name', 'linear')
+            model_outputs_probabilities = act in ('softmax', 'sigmoid')
+            print(f"[ML Server] Final layer activation: {act} -> "
+                  f"{'probabilities' if model_outputs_probabilities else 'logits'}")
+        except Exception:
+            model_outputs_probabilities = False
         return True
     except Exception as e:
         model_load_error = str(e)
@@ -303,8 +355,19 @@ def predict():
             if model is not None:
                 predictions = model.predict(img_array, verbose=0)
                 keras_preds = predictions[0]
-                exp_p = np.exp(keras_preds - np.max(keras_preds))
-                keras_probs = exp_p / np.sum(exp_p)
+                if model_outputs_probabilities:
+                    # Final layer already applied softmax; use output directly.
+                    keras_probs = keras_preds.astype(np.float64)
+                    keras_probs = np.clip(keras_probs, 0, None)
+                    s = keras_probs.sum()
+                    if s > 0:
+                        keras_probs /= s
+                    else:
+                        keras_probs = np.ones(len(CLASS_LABELS)) / len(CLASS_LABELS)
+                else:
+                    # Raw logits — apply softmax manually.
+                    exp_p = np.exp(keras_preds - np.max(keras_preds))
+                    keras_probs = exp_p / np.sum(exp_p)
             else:
                 keras_probs = np.ones(len(CLASS_LABELS)) / len(CLASS_LABELS)
 
@@ -312,20 +375,23 @@ def predict():
             clip_probs = np.zeros(len(CLASS_LABELS))
             clip_top_dict = None
             if clip_classifier is not None:
-                gem_prompts = [f"a photo of a {c} gemstone" for c in CLASS_LABELS]
+                gem_prompts = [clip_prompt_for_label(label) for label in CLASS_LABELS]
+                prompt_to_index = {prompt: index for index, prompt in enumerate(gem_prompts)}
                 gem_res = clip_classifier(pil_img, candidate_labels=gem_prompts)
                 for r in gem_res:
-                    name = r['label'].replace('a photo of a ', '').replace(' gemstone', '')
-                    if name in CLASS_LABELS:
-                        c_idx = CLASS_LABELS.index(name)
+                    c_idx = prompt_to_index.get(r['label'])
+                    if c_idx is not None:
                         clip_probs[c_idx] = float(r['score'])
                 if gem_res:
-                    clip_top_name = map_gemstone_name(gem_res[0]['label'].replace('a photo of a ', '').replace(' gemstone', ''))
+                    clip_top_index = prompt_to_index.get(gem_res[0]['label'])
+                    clip_top_name = map_gemstone_name(
+                        CLASS_LABELS[clip_top_index] if clip_top_index is not None else 'Unknown'
+                    )
                     clip_top_dict = {'name': clip_top_name, 'confidence': float(gem_res[0]['score'])}
 
             # ── 4. Multimodal Fusion for this View ──
             if clip_classifier is not None and model is not None:
-                alpha = 0.65
+                alpha = CNN_FUSION_WEIGHT
                 fused_probs_i = alpha * keras_probs + (1.0 - alpha) * clip_probs
             elif model is not None:
                 alpha = 1.0
@@ -389,7 +455,7 @@ def predict():
 
         multimodal_fusion_data = {
             'fusionMode': fusion_mode,
-            'alphaWeightCnn': 0.65 if (clip_classifier is not None and model is not None) else 1.0,
+            'alphaWeightCnn': CNN_FUSION_WEIGHT if (clip_classifier is not None and model is not None) else 1.0,
             'accuracyGainEstimate': gain_estimate,
             'cnnTop': cnn_top_dict,
             'clipTop': cnn_top_dict,
