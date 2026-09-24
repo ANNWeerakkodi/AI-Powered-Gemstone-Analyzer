@@ -586,6 +586,20 @@ export function GemAnalyzerPage() {
   );
   const dynamicGrade = calculateGradeFromScore(dynamicScore);
 
+  // Keep the AI's original valuation as the baseline, then adjust it as the
+  // user fine-tunes the same signals used to calculate the quality score.
+  const baselineQualityScore = result
+    ? Math.round(
+      result.qualityDetails.clarity * 0.4
+      + result.qualityDetails.colorSaturation * 0.35
+      + result.qualityDetails.cutQuality * 0.25
+    )
+    : 0;
+  const qualityPriceMultiplier = Math.max(
+    0.5,
+    Math.min(1.5, 1 + (dynamicScore - baselineQualityScore) / 100)
+  );
+
   const currentCaratMultiplier = getCaratMultiplier(caratWeight);
 
   const basePerCaratSuggestedUsd = result
@@ -595,7 +609,15 @@ export function GemAnalyzerPage() {
     : 0;
 
   const dynamicPerCaratUsd = result
-    ? Math.max(1, Math.round(basePerCaratSuggestedUsd * currentCaratMultiplier * (0.7 + (priceSliderValue / 100) * 0.6)))
+    ? Math.max(
+      1,
+      Math.round(
+        basePerCaratSuggestedUsd
+        * currentCaratMultiplier
+        * (0.7 + (priceSliderValue / 100) * 0.6)
+        * qualityPriceMultiplier
+      )
+    )
     : 0;
 
   const currentPrice = Math.round(dynamicPerCaratUsd * caratWeight);
@@ -790,8 +812,8 @@ export function GemAnalyzerPage() {
                             type="button"
                             onClick={() => setImageDisplayMode('original')}
                             className={`flex-1 py-1.5 px-3 rounded-xl text-xs font-semibold transition-all ${imageDisplayMode === 'original'
-                                ? 'bg-primary text-primary-foreground shadow-sm'
-                                : 'text-white/70 hover:text-white'
+                              ? 'bg-primary text-primary-foreground shadow-sm'
+                              : 'text-white/70 hover:text-white'
                               }`}
                           >
                             Original Scan
@@ -800,8 +822,8 @@ export function GemAnalyzerPage() {
                             type="button"
                             onClick={() => setImageDisplayMode('saliency')}
                             className={`flex-1 py-1.5 px-3 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${imageDisplayMode === 'saliency'
-                                ? 'bg-accent text-accent-foreground shadow-sm'
-                                : 'text-white/70 hover:text-white'
+                              ? 'bg-accent text-accent-foreground shadow-sm'
+                              : 'text-white/70 hover:text-white'
                               }`}
                           >
                             <Cpu className="w-3.5 h-3.5" />
@@ -839,8 +861,8 @@ export function GemAnalyzerPage() {
                             <div
                               key={label.name}
                               className={`relative rounded-2xl border transition-all p-1.5 text-center flex flex-col items-center justify-center aspect-square ${preview
-                                  ? 'border-primary/50 bg-primary/5'
-                                  : 'border-dashed border-border/60 hover:border-primary/40 bg-secondary/20'
+                                ? 'border-primary/50 bg-primary/5'
+                                : 'border-dashed border-border/60 hover:border-primary/40 bg-secondary/20'
                                 }`}
                               onDragOver={(e) => {
                                 e.preventDefault();
@@ -998,8 +1020,8 @@ export function GemAnalyzerPage() {
                         type="button"
                         onClick={() => setShowTechnicalDetails(!showTechnicalDetails)}
                         className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${showTechnicalDetails
-                            ? 'bg-primary text-primary-foreground shadow-md'
-                            : 'bg-secondary text-foreground hover:bg-secondary/80 border border-border/60'
+                          ? 'bg-primary text-primary-foreground shadow-md'
+                          : 'bg-secondary text-foreground hover:bg-secondary/80 border border-border/60'
                           }`}
                       >
                         <Cpu className="w-3.5 h-3.5" />
@@ -1254,22 +1276,20 @@ export function GemAnalyzerPage() {
                               <button
                                 type="button"
                                 onClick={() => setSummaryLang('en')}
-                                className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold transition-all ${
-                                  summaryLang === 'en'
+                                className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold transition-all ${summaryLang === 'en'
                                     ? 'bg-primary text-primary-foreground shadow-xs'
                                     : 'text-muted-foreground hover:text-foreground'
-                                }`}
+                                  }`}
                               >
                                 English
                               </button>
                               <button
                                 type="button"
                                 onClick={() => setSummaryLang('si')}
-                                className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold transition-all ${
-                                  summaryLang === 'si'
+                                className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold transition-all ${summaryLang === 'si'
                                     ? 'bg-primary text-primary-foreground shadow-xs'
                                     : 'text-muted-foreground hover:text-foreground'
-                                }`}
+                                  }`}
                               >
                                 සිංහල
                               </button>
@@ -1469,8 +1489,8 @@ export function GemAnalyzerPage() {
                                 type="button"
                                 onClick={() => setCaratWeight(preset)}
                                 className={`px-2 py-0.5 rounded-lg text-[10px] font-mono transition-all border shrink-0 ${caratWeight === preset
-                                    ? 'bg-gold text-black font-bold border-gold shadow-sm'
-                                    : 'bg-secondary/50 text-muted-foreground border-border/40 hover:text-foreground hover:bg-secondary'
+                                  ? 'bg-gold text-black font-bold border-gold shadow-sm'
+                                  : 'bg-secondary/50 text-muted-foreground border-border/40 hover:text-foreground hover:bg-secondary'
                                   }`}
                               >
                                 {preset} ct
@@ -1494,19 +1514,13 @@ export function GemAnalyzerPage() {
                           <p className="text-3xl font-bold text-foreground font-heading">
                             ${currentPrice.toLocaleString()} <span className="text-xs font-normal text-muted-foreground">USD Total</span>
                           </p>
-                          <div className="flex items-center gap-2 mt-1 text-xs">
-                            <span className="font-semibold text-muted-foreground">
-                              ≈ LKR {currentPriceLkr.toLocaleString()}
-                            </span>
-                            <span className="text-muted-foreground">•</span>
-                            <span className="font-mono text-primary font-bold">
-                              ${dynamicPerCaratUsd.toLocaleString()} / ct
-                            </span>
-                          </div>
+                          <p className="mt-1 text-xs font-semibold text-muted-foreground">
+                            ≈ LKR {currentPriceLkr.toLocaleString()}
+                          </p>
                         </div>
                       </div>
 
-                      <div className="space-y-3">
+                      <div className="hidden">
                         <div className="flex justify-between text-xs text-muted-foreground font-medium">
                           <span>Min: ${result.priceRange.minUsd.toLocaleString()}</span>
                           <span className="text-primary font-bold">
