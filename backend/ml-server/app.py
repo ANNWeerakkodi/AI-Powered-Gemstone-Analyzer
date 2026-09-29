@@ -14,6 +14,7 @@ import numpy as np
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from PIL import Image
+from specimen_screening import screen_specimen
 import tensorflow as tf
 
 try:
@@ -231,7 +232,7 @@ def load_model():
     global model, clip_classifier, model_load_error
     try:
         if pipeline is None:
-            print('[ML Server] Transformers is not installed; using the Keras classifier only.')
+            print('[ML Server] Transformers is not installed; specimen screening is unavailable; analysis will be blocked.')
         else:
             print("[ML Server] Loading CLIP zero-shot classification model...")
             clip_classifier = pipeline('zero-shot-image-classification', model='openai/clip-vit-base-patch32')
@@ -317,16 +318,6 @@ def predict():
         primary_pil_img = None
         primary_image_np = None
 
-        labels = [
-            'a photo of a gemstone, crystal, or jewelry',
-            'a photo of a person, face, or selfie',
-            'a photo of an outdoor landscape, nature, tree, or plant',
-            'a photo of an animal, cat, or dog',
-            'a photo of a car, vehicle, or building',
-            'a photo of food, drink, or furniture'
-        ]
-        forbidden_labels = labels[1:]
-
         for idx, file in enumerate(files):
             image_bytes = file.read()
             pil_img = Image.open(io.BytesIO(image_bytes)).convert('RGB')
@@ -338,20 +329,23 @@ def predict():
                 primary_image_np = image_np
 
             # ── 1. Out-Of-Domain (OOD) Filter with CLIP ──
-            if clip_classifier is not None:
-                ood_res = clip_classifier(pil_img, labels)
-                top_label = ood_res[0]['label']
-                if top_label in forbidden_labels:
-                    if len(files) == 1:
-                        return jsonify({
-                            'isGemstone': False,
-                            'error': 'Please upload a valid gemstone image.',
-                            'clipResult': top_label,
-                        }), 400
-                    else:
-                        continue # Skip invalid view in multi-image batch
+            screening = screen_specimen(clip_classifier, pil_img)
+            if screening != 'passed':
+                unavailable = screening == 'unavailable'
+                return jsonify({
+                    'isGemstone': False,
+                    'identificationStatus': 'unavailable' if unavailable else 'uncertain',
+                    'code': 'SCREENING_UNAVAILABLE' if unavailable else 'SPECIMEN_UNCERTAIN',
+                    'error': (
+                        'Gemstone screening is unavailable. Please try again later.'
+                        if unavailable else
+                        'This image may show glass, an imitation, or an uncertain specimen. '
+                        'Gemstone identity cannot be established, so grading and pricing are withheld. '
+                        'A gemologist can test the material.'
+                    ),
+                    'failedView': idx + 1,
+                }), 503 if unavailable else 422
 
-            # ── 2. CNN (Keras) Prediction ──
             if model is not None:
                 predictions = model.predict(img_array, verbose=0)
                 keras_preds = predictions[0]
@@ -523,6 +517,8 @@ def predict():
 
         return jsonify({
             'isGemstone': True,
+            'identificationStatus': 'visual_match',
+            'authenticityVerified': False,
             'gemstone': predicted_name,
             'confidence': confidence,
             'topPredictions': top_predictions,

@@ -411,7 +411,7 @@ export function GemAnalyzerPage() {
       <!-- Primary Valuation Grid -->
       <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; background-color: #f8fafc; border: 1px solid #e2e8f0; padding: 16px; border-radius: 12px; margin-bottom: 16px;">
         <div>
-          <p style="margin: 0; font-size: 10px; color: #64748b; text-transform: uppercase; font-weight: 700;">Identified Gemstone</p>
+          <p style="margin: 0; font-size: 10px; color: #64748b; text-transform: uppercase; font-weight: 700;">Possible Gemstone</p>
           <p style="margin: 2px 0 0 0; font-size: 16px; font-weight: 800; color: #0284c7;">${result.gemstone}</p>
         </div>
         <div>
@@ -1038,7 +1038,7 @@ export function GemAnalyzerPage() {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between">
                             <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
-                              Identified Gemstone Variety
+                              Possible Gemstone Variety
                             </p>
                             <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald bg-emerald/10 px-2.5 py-0.5 rounded-full">
                               <CheckCircle2 className="w-3 h-3" /> Valid Gemstone
