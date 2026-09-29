@@ -6,7 +6,6 @@ export const NAV_LINKS = [
   { label: 'How to Use', section: 'how-to-use', type: 'hash' as const },
   { label: 'Market Prices', path: '/market-prices', type: 'path' as const },
   { label: 'Analysis', path: '/analyze', type: 'path' as const },
-  { label: 'Contact', section: 'contact', type: 'hash' as const },
 ] as const;
 
 export const HOW_TO_USE_STEPS = [
