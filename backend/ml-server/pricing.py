@@ -4,6 +4,7 @@ Provides market-calibrated price estimates with statistical 95% Confidence Inter
 """
 
 import math
+from market_scraper import scrape_gemval_price_range
 
 # USD to LKR exchange rate
 USD_TO_LKR = 325.0
@@ -91,7 +92,12 @@ def predict_price(gemstone_name: str, quality_grade: str, quality_score: float, 
     if carat_weight <= 0:
         carat_weight = 1.0
 
-    base_min, base_max = BASE_PRICES.get(gemstone_name, (15, 600))
+    # Attempt to scrape real market values
+    scraped_prices = scrape_gemval_price_range(gemstone_name)
+    if scraped_prices:
+        base_min, base_max = scraped_prices
+    else:
+        base_min, base_max = BASE_PRICES.get(gemstone_name, (15, 600))
     carat_mult = get_carat_multiplier(carat_weight)
 
     # Per-carat rate adjusted for rarity multiplier

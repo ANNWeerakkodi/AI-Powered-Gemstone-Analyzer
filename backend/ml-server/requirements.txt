@@ -8,4 +8,5 @@ opencv-python>=4.8.0
 scipy>=1.10.0
 transformers>=4.30.0
 torch
-
+requests>=2.31.0
+beautifulsoup4>=4.12.0
